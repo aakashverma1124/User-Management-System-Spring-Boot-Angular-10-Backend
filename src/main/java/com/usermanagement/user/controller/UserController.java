@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -45,6 +47,15 @@ public class UserController {
         existingUser.setEmailId(user.getEmailId());
         User updatedUser = userRepository.save(existingUser);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("delete-user/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable Long id) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        userRepository.delete(existingUser);
+        Map<String, Boolean> response = new HashMap<>();
+        return ResponseEntity.ok(response);
     }
 
 }
